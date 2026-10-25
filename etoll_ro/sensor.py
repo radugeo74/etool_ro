@@ -7,7 +7,7 @@ from homeassistant.util import dt as dt_util
 
 from .const import VEHICLE_CATEGORY_LABELS
 from .entity import AccountEntity, VehicleEntity, discover
-from .models import LOCAL_ZONE, next_bridge_expiration
+from .models import LOCAL_ZONE, REQUIRED_SECTIONS, bridge_crossings_value, next_bridge_expiration
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -86,7 +86,16 @@ class VehicleServiceSensor(VehicleEntity, SensorEntity):
         return self.vehicle.get("services", {})
 
     @property
+    def bridge_removed(self):
+        return (self.coordinator.data or {}).get("account", {}).get("bridge_service_removed")
+
+    @property
     def available(self):
+        if self.key == "bridge_remaining":
+            if self.bridge_removed is None:
+                return False
+            if self.bridge_removed is True:
+                return super().available
         return (
             super().available
             and self.coordinator.data["sections"].get("services", False)
@@ -100,14 +109,12 @@ class VehicleServiceSensor(VehicleEntity, SensorEntity):
         if self.key == "next_bridge_expiration":
             expiry = next_bridge_expiration(self.summary.get("bridge_passes", []), dt_util.utcnow())
             return expiry.astimezone(LOCAL_ZONE).strftime("%d/%m/%Y %H:%M") if expiry else None
-        return sum(
-            p["remaining"]
-            for p in self.summary.get("bridge_passes", [])
-            if p["valid_until"] is None or dt_util.utcnow() <= p["valid_until"]
-        )
+        return bridge_crossings_value(self.summary.get("bridge_passes", []), self.bridge_removed, dt_util.utcnow())
 
     @property
     def extra_state_attributes(self):
+        if self.key == "bridge_remaining" and self.bridge_removed is True:
+            return {"bridge_service_removed": True, "cancellation_date": "2026-10-01"}
         if self.key == "next_bridge_expiration":
             expiry = next_bridge_expiration(self.summary.get("bridge_passes", []), dt_util.utcnow())
             return {"expires_at": expiry.isoformat() if expiry else None}
@@ -194,10 +201,7 @@ class AccountSensor(AccountEntity, SensorEntity):
                 "sections_available": data.get("sections", {}) if self.coordinator.last_update_success else {},
                 "section_errors": data.get("section_errors", {}) if self.coordinator.last_update_success else {},
                 "update_complete": self.coordinator.last_update_success
-                and all(
-                    data.get("sections", {}).get(key) is True
-                    for key in ("services", "invoices", "notifications", "service_status")
-                ),
+                and all(data.get("sections", {}).get(key) is True for key in REQUIRED_SECTIONS),
                 "last_full_update": full.isoformat() if full else None,
             }
         if self.key == "service_status":

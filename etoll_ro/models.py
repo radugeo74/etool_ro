@@ -9,6 +9,23 @@ LOCAL_ZONE = ZoneInfo("Europe/Bucharest")
 PAID_STATUSES = {"ACTIVE", "EXPIRED", "CONSUMED"}
 EXCLUDED_STATUSES = {"DRAFT", "CANCELLED", "REFUNDED"}
 SERVICE_TYPES = {"VIGNETTE", "BRIDGE", "ROUTE", "PER_KM"}
+REQUIRED_SECTIONS = ("services", "invoices", "notifications", "service_status", "portal_config")
+
+
+def bridge_service_removed(payload):
+    """Read exact service tokens from the public portal configuration."""
+    if not isinstance(payload, dict) or not isinstance(payload.get("REMOVESERVICES"), str):
+        raise EtollError("Unrecognized portal service configuration")
+    return "BRIDGE" in {token.strip() for token in payload["REMOVESERVICES"].split(",")}
+
+
+def bridge_crossings_value(passes, removed, now):
+    """Use the user-requested notice only while the portal removes BRIDGE."""
+    if removed is True:
+        return "Taxă anulată din 01.10.2026"
+    if removed is not False:
+        return None
+    return sum(p["remaining"] for p in passes if p["valid_until"] is None or now <= p["valid_until"])
 
 
 def next_bridge_expiration(passes, now):
@@ -27,8 +44,7 @@ def next_bridge_expiration(passes, now):
 
 def last_complete_update(previous, snapshot):
     """A partial refresh must not claim that all displayed data is fresh."""
-    required = ("services", "invoices", "notifications", "service_status")
-    if all(snapshot["sections"].get(key) is True for key in required):
+    if all(snapshot["sections"].get(key) is True for key in REQUIRED_SECTIONS):
         return snapshot["updated_at"]
     return previous
 

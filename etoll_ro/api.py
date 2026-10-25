@@ -293,7 +293,14 @@ class EtollClient:
 
     async def dashboard(self, profile_id: str):
         """Publish optional sections independently, while enforcing profile identity."""
-        from .models import LOCAL_ZONE, invoice_summary, notification_count, service_status, service_summary
+        from .models import (
+            LOCAL_ZONE,
+            bridge_service_removed,
+            invoice_summary,
+            notification_count,
+            service_status,
+            service_summary,
+        )
 
         now = datetime.now(timezone.utc)
         vehicles = await self.snapshot(profile_id)
@@ -333,6 +340,13 @@ class EtollClient:
                 raise EtollError("Status endpoint unavailable")
             return payload
 
+        async def portal_config():
+            code, payload = await self._json("GET", "https://portal.etoll.ro/portal-extern/appsettings.json")
+            if code != 200:
+                raise EtollError("Portal configuration unavailable")
+            return payload
+
+        account["bridge_service_removed"] = await section("portal_config", portal_config, bridge_service_removed)
         services = await section("services", self._tolls, lambda rows: service_summary(rows, vehicles, now))
         if services is not None:
             for vehicle_id, summary in services.items():

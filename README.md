@@ -194,3 +194,14 @@ sursele protocolului și limitele validării sunt în `docs/PROTOCOL.md`.
 
 Dezinstalare: elimină integrarea din Dispozitive și servicii, șterge numai directorul
 `/config/custom_components/etoll_ro` și repornește. Contul și datele eToll nu se modifică.
+
+### Indicatorul pentru taxele de pod (0.2.8)
+
+Configurația publică `portal-extern/appsettings.json` este citită la fiecare
+actualizare (30 minute). Dacă `REMOVESERVICES` conține tokenul `BRIDGE`,
+**Bridge crossings remaining** afișează **Taxă anulată din 01.10.2026**.
+Textul și data sunt cele solicitate de utilizator; configurația portalului indică
+retragerea serviciului și nu furnizează o dată sau domeniul legal al anulării.
+Când indicatorul dispare din șir, senzorul revine la numărul de treceri valabile.
+O configurație lipsă, invalidă sau inaccesibilă face senzorul indisponibil.
+Istoricul cheltuielilor și ID-ul entității rămân neschimbate.

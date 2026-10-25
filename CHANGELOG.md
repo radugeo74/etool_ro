@@ -1,5 +1,13 @@
 # Modificări
 
+## 0.2.8-beta.1 — 25 octombrie 2026
+
+- Bridge crossings remaining afișează „Taxă anulată din 01.10.2026” cât timp
+  configurația publică a portalului include BRIDGE în REMOVESERVICES.
+- La eliminarea indicatorului revine la numărul de treceri; dacă citirea configurației
+  eșuează, senzorul devine indisponibil. ID-ul entității se păstrează.
+- Secțiunea portal_config participă la diagnosticul actualizării complete.
+
 ## 0.2.7-beta.1 — 25 octombrie 2026
 
 - Dimensiunea paginii de servicii este 20, conform apelului GetServicesPage din
