@@ -1,0 +1,239 @@
+{
+  "title": "eToll România",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect eToll",
+        "description": "Beta integration. Use your own eToll account. Credentials are stored locally in Home Assistant. The current portal profile is monitored without changing it.",
+        "data": {
+          "username": "Email or phone",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect eToll",
+        "description": "Enter credentials for the same eToll profile.",
+        "data": {
+          "username": "Email or phone",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Authentication rejected. Check your credentials and account status in the official portal.",
+      "unsupported_auth": "The eToll SSO client does not allow this login flow. This integration needs an authentication update.",
+      "cannot_connect": "Cannot read eToll data. Check the service and ensure a current profile exists in the official portal. An API change may require an integration update."
+    },
+    "abort": {
+      "already_configured": "This profile is already configured.",
+      "reauth_successful": "Account reconnected.",
+      "wrong_account": "Use the same eToll profile as the existing integration."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "category": {
+        "name": "Vehicle category",
+        "state_attributes": {
+          "category_code": {
+            "name": "Category code"
+          }
+        }
+      },
+      "expires_at": {
+        "name": "Vignette expiration",
+        "state_attributes": {
+          "valid_from": {
+            "name": "Valid from"
+          },
+          "valid_until": {
+            "name": "Valid until"
+          },
+          "duration": {
+            "name": "Duration"
+          },
+          "status": {
+            "name": "Status"
+          },
+          "price_paid": {
+            "name": "Price paid (RON)"
+          },
+          "purchased_at": {
+            "name": "Purchased at"
+          },
+          "serial": {
+            "name": "Serial"
+          }
+        }
+      },
+      "days_remaining": {
+        "name": "Vignette valid until"
+      },
+      "spending": {
+        "name": "Vehicle spending this year",
+        "state_attributes": {
+          "year": {
+            "name": "Year"
+          },
+          "vignette_amount": {
+            "name": "Vignettes (RON)"
+          },
+          "bridge_amount": {
+            "name": "Bridge tolls (RON)"
+          },
+          "route_amount": {
+            "name": "Route tickets (RON)"
+          },
+          "purchase_count": {
+            "name": "Purchases this year"
+          },
+          "last_purchase": {
+            "name": "Last purchase"
+          },
+          "yearly_totals": {
+            "name": "Yearly totals (RON)"
+          }
+        }
+      },
+      "bridge_remaining": {
+        "name": "Bridge crossings remaining",
+        "state_attributes": {
+          "bridge_passes": {
+            "name": "Active bridge passes"
+          }
+        }
+      },
+      "notifications": {
+        "name": "Unread notifications"
+      },
+      "service_status": {
+        "name": "eToll portal status",
+        "state_attributes": {
+          "component": {
+            "name": "Monitored component"
+          },
+          "updated_at": {
+            "name": "Status updated"
+          }
+        },
+        "state": {
+          "operational": "Operational",
+          "performance_issues": "Performance issues",
+          "partial_outage": "Partial outage",
+          "major_outage": "Major outage"
+        }
+      },
+      "latest_invoice": {
+        "name": "Latest invoice",
+        "state_attributes": {
+          "payment_date": {
+            "name": "Payment date"
+          },
+          "invoice_number": {
+            "name": "Invoice number"
+          },
+          "payment_method": {
+            "name": "Payment method"
+          },
+          "services": {
+            "name": "Services"
+          },
+          "amount_without_vat": {
+            "name": "Amount without VAT (RON)"
+          },
+          "vat_amount": {
+            "name": "VAT (RON)"
+          },
+          "vat_percentage": {
+            "name": "VAT (%)"
+          }
+        }
+      },
+      "paid_this_year": {
+        "name": "Paid this year",
+        "state_attributes": {
+          "year": {
+            "name": "Year"
+          },
+          "yearly_totals": {
+            "name": "Yearly totals (RON)"
+          },
+          "invoice_count": {
+            "name": "Invoices this year"
+          },
+          "vat_amount": {
+            "name": "VAT (RON)"
+          },
+          "amount_without_vat": {
+            "name": "Amount without VAT (RON)"
+          }
+        }
+      },
+      "vehicle_count": {
+        "name": "Vehicles"
+      },
+      "next_bridge_expiration": {
+        "name": "Next bridge toll expiration",
+        "state_attributes": {
+          "expires_at": {
+            "name": "Expiration (ISO)"
+          }
+        }
+      },
+      "last_successful_update": {
+        "name": "Last successful update",
+        "state_attributes": {
+          "updated_at": {
+            "name": "Updated at (ISO)"
+          },
+          "last_poll_succeeded": {
+            "name": "Last base poll succeeded"
+          },
+          "sections_available": {
+            "name": "Available sections"
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "vignette_valid": {
+        "name": "Vignette valid"
+      },
+      "vehicle_data_problem": {
+        "name": "Vehicle data",
+        "state_attributes": {
+          "plate_number": {
+            "name": "License plate"
+          },
+          "vin": {
+            "name": "VIN"
+          },
+          "registration_certificate": {
+            "name": "Registration certificate"
+          },
+          "emission_standard": {
+            "name": "Emission standard"
+          },
+          "country_code": {
+            "name": "Country code"
+          },
+          "maximum_mass_kg": {
+            "name": "Maximum authorized mass (kg)"
+          },
+          "bridge_category": {
+            "name": "Bridge category"
+          },
+          "temporary_plate": {
+            "name": "Temporary plate"
+          },
+          "favorite": {
+            "name": "Favorite"
+          },
+          "vehicle_type": {
+            "name": "Vehicle type"
+          }
+        }
+      }
+    }
+  }
+}

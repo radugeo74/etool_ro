@@ -1,0 +1,239 @@
+{
+  "title": "eToll România",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Conectare eToll",
+        "description": "Integrare beta. Folosește propriul cont eToll. Datele de acces se păstrează local în Home Assistant. Este monitorizat profilul curent din portal, fără modificarea lui.",
+        "data": {
+          "username": "Email sau telefon",
+          "password": "Parolă"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconectare eToll",
+        "description": "Introdu datele de acces pentru același profil eToll.",
+        "data": {
+          "username": "Email sau telefon",
+          "password": "Parolă"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Autentificare respinsă. Verifică datele de acces și starea contului în portalul oficial.",
+      "unsupported_auth": "Clientul SSO eToll nu permite acest mod de autentificare. Integrarea necesită actualizarea autentificării.",
+      "cannot_connect": "Nu pot citi datele eToll. Verifică serviciul și existența unui profil curent în portal. O schimbare API poate necesita actualizarea integrării."
+    },
+    "abort": {
+      "already_configured": "Acest profil este deja configurat.",
+      "reauth_successful": "Cont reconectat.",
+      "wrong_account": "Folosește același profil eToll ca în integrarea existentă."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "category": {
+        "name": "Categorie vehicul",
+        "state_attributes": {
+          "category_code": {
+            "name": "Cod categorie"
+          }
+        }
+      },
+      "expires_at": {
+        "name": "Expirare rovinietă",
+        "state_attributes": {
+          "valid_from": {
+            "name": "Valabilă de la"
+          },
+          "valid_until": {
+            "name": "Valabilă până la"
+          },
+          "duration": {
+            "name": "Perioadă"
+          },
+          "status": {
+            "name": "Stare"
+          },
+          "price_paid": {
+            "name": "Preț plătit (lei)"
+          },
+          "purchased_at": {
+            "name": "Data achiziției"
+          },
+          "serial": {
+            "name": "Serie"
+          }
+        }
+      },
+      "days_remaining": {
+        "name": "Rovinietă valabilă până la"
+      },
+      "spending": {
+        "name": "Cheltuieli vehicul în anul curent",
+        "state_attributes": {
+          "year": {
+            "name": "An"
+          },
+          "vignette_amount": {
+            "name": "Roviniete (lei)"
+          },
+          "bridge_amount": {
+            "name": "Peaje (lei)"
+          },
+          "route_amount": {
+            "name": "Tichete de rută (lei)"
+          },
+          "purchase_count": {
+            "name": "Achiziții în anul curent"
+          },
+          "last_purchase": {
+            "name": "Ultima achiziție"
+          },
+          "yearly_totals": {
+            "name": "Totaluri pe ani (lei)"
+          }
+        }
+      },
+      "bridge_remaining": {
+        "name": "Treceri de pod rămase",
+        "state_attributes": {
+          "bridge_passes": {
+            "name": "Peaje active"
+          }
+        }
+      },
+      "notifications": {
+        "name": "Notificări necitite"
+      },
+      "service_status": {
+        "name": "Starea portalului eToll",
+        "state_attributes": {
+          "component": {
+            "name": "Componentă monitorizată"
+          },
+          "updated_at": {
+            "name": "Actualizare stare"
+          }
+        },
+        "state": {
+          "operational": "Funcțional",
+          "performance_issues": "Funcționează cu întârzieri",
+          "partial_outage": "Întrerupere parțială",
+          "major_outage": "Întrerupere majoră"
+        }
+      },
+      "latest_invoice": {
+        "name": "Ultima factură",
+        "state_attributes": {
+          "payment_date": {
+            "name": "Data plății"
+          },
+          "invoice_number": {
+            "name": "Număr factură"
+          },
+          "payment_method": {
+            "name": "Metodă de plată"
+          },
+          "services": {
+            "name": "Servicii"
+          },
+          "amount_without_vat": {
+            "name": "Valoare fără TVA (lei)"
+          },
+          "vat_amount": {
+            "name": "TVA (lei)"
+          },
+          "vat_percentage": {
+            "name": "TVA (%)"
+          }
+        }
+      },
+      "paid_this_year": {
+        "name": "Total plătit în anul curent",
+        "state_attributes": {
+          "year": {
+            "name": "An"
+          },
+          "yearly_totals": {
+            "name": "Totaluri pe ani (lei)"
+          },
+          "invoice_count": {
+            "name": "Facturi în anul curent"
+          },
+          "vat_amount": {
+            "name": "TVA (lei)"
+          },
+          "amount_without_vat": {
+            "name": "Valoare fără TVA (lei)"
+          }
+        }
+      },
+      "vehicle_count": {
+        "name": "Număr vehicule"
+      },
+      "next_bridge_expiration": {
+        "name": "Următoarea expirare a peajelor",
+        "state_attributes": {
+          "expires_at": {
+            "name": "Expirare (ISO)"
+          }
+        }
+      },
+      "last_successful_update": {
+        "name": "Ultima actualizare reușită",
+        "state_attributes": {
+          "updated_at": {
+            "name": "Actualizare (ISO)"
+          },
+          "last_poll_succeeded": {
+            "name": "Ultima citire de bază reușită"
+          },
+          "sections_available": {
+            "name": "Secțiuni disponibile"
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "vignette_valid": {
+        "name": "Rovinietă valabilă"
+      },
+      "vehicle_data_problem": {
+        "name": "Date vehicul",
+        "state_attributes": {
+          "plate_number": {
+            "name": "Număr înmatriculare"
+          },
+          "vin": {
+            "name": "Serie șasiu"
+          },
+          "registration_certificate": {
+            "name": "Serie certificat înmatriculare"
+          },
+          "emission_standard": {
+            "name": "Normă de poluare"
+          },
+          "country_code": {
+            "name": "Cod țară"
+          },
+          "maximum_mass_kg": {
+            "name": "Masă maximă autorizată (kg)"
+          },
+          "bridge_category": {
+            "name": "Categorie peaj"
+          },
+          "temporary_plate": {
+            "name": "Număr provizoriu"
+          },
+          "favorite": {
+            "name": "Favorit"
+          },
+          "vehicle_type": {
+            "name": "Tip vehicul"
+          }
+        }
+      }
+    }
+  }
+}

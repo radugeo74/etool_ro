@@ -1,0 +1,11 @@
+{
+  "domain": "etoll_ro",
+  "name": "eToll România",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://portal.etoll.ro/",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "0.2.5-beta.1"
+}
