@@ -5,7 +5,7 @@ Codul nou este disponibil sub licența MIT. Nu este afiliat CNAIR sau proiectulu
 `cnecrea/tollro` și nu include cod din acel proiect. Iconul a fost furnizat de
 utilizator; licența MIT a codului nu stabilește drepturile asupra acestui material grafic.
 
-**Stare: 0.2.5-beta.1.** Clientul este testat automat cu răspunsuri sintetice și
+**Stare: 0.2.7-beta.1.** Clientul este testat automat cu răspunsuri sintetice și
 un server HTTP local. Autentificarea cu un cont real, schema răspunsurilor
 autentificate și încărcarea într-o instalare Home Assistant nu sunt încă validate.
 Nu considera această versiune confirmată pentru utilizare zilnică înaintea
@@ -36,7 +36,7 @@ Alertele se configurează prin automatizările Home Assistant; un exemplu este �
 | Dispozitiv | Entitate | Detalii în atribute |
 | --- | --- | --- |
 | Cont | Număr vehicule | — |
-| Cont | Ultima actualizare reușită | Ora ultimei citiri complete și starea secțiunilor |
+| Cont | Ultima actualizare reușită | Ora ultimei citiri de bază, starea și erorile secțiunilor |
 | Cont | Notificări necitite | — |
 | Cont | Starea portalului eToll | Componenta și actualizarea stării |
 | Cont | Ultima factură | Număr, dată, metodă de plată, servicii, net, TVA |
@@ -59,12 +59,15 @@ Cei doi senzori adăugați în 0.2.5 afișează `DD/MM/YYYY HH:mm` în Europe/Bu
 `unknown` dacă nu mai sunt treceri disponibile sau dacă lipsește data unui pachet
 neconsumat. La eroarea secțiunii de servicii devine `unavailable`.
 
-„Ultima actualizare reușită” avansează numai după citirea vehiculelor și a tuturor
-secțiunilor (servicii, facturi, notificări și status public), cu profilul verificat.
-La o citire parțială sau eșuată păstrează valoarea precedentă, pentru a arăta cât
-de veche este ultima sincronizare completă. Atributele `updated_at` (ISO),
-`last_poll_succeeded` și `sections_available` permit automatizări și diagnostic.
-Ora este ținută în memorie: după restart rămâne `unknown` până la primul succes complet.
+Din 0.2.6, „Ultima actualizare reușită” avansează după citirea de bază a vehiculelor,
+cu profilul verificat, chiar dacă o secțiune opțională eșuează. La eșecul citirii
+de bază păstrează ora precedentă. `update_complete` arată dacă au reușit și toate
+secțiunile; `last_full_update` păstrează separat ora ultimei citiri complete.
+`section_errors` indică etapa (`fetch` sau `parse`) și motivul sanitizat, fără
+date de cont ori răspunsuri API brute. Atributele `updated_at` (ISO),
+`last_poll_succeeded` și `sections_available` rămân disponibile.
+Orele sunt ținute în memorie: după restart rămân necunoscute până la succesul
+corespunzător. O eroare a serviciilor nu mai ascunde actualizarea vehiculelor.
 
 Din 0.2.4, „Vehicle category” afișează denumirea completă în română, de exemplu
 `A — Autoturisme (sub 8+1 locuri)`, folosind etichetele portalului eToll și limitele

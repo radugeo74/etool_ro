@@ -1,5 +1,22 @@
 # Modificări
 
+## 0.2.7-beta.1 — 25 octombrie 2026
+
+- Dimensiunea paginii de servicii este 20, conform apelului GetServicesPage din
+  portalul oficial, în loc de 100. Paginarea cu cursor se păstrează.
+- Erorile serviciilor precizează filtrul și dimensiunea paginii; erorile API pot
+  include coduri numerice și numele parametrului validat, fără texte brute sau date de cont.
+- Remediere candidată pentru HTTP 400 observat pe contul utilizatorului;
+  cauza exactă și rezultatul trebuie confirmate după instalare.
+
+## 0.2.6-beta.1 — 25 octombrie 2026
+
+- Corectat „Last successful update”: afișează ultima citire de bază reușită și
+  când o secțiune opțională eșuează. Ora citirii complete rămâne în `last_full_update`.
+- Atribute noi `update_complete` și `section_errors`; erori sanitizate pe secțiuni
+  disponibile și în diagnosticul integrării.
+- Erorile serviciilor nu sunt mascate: senzorii afectați rămân indisponibili.
+
 ## 0.2.5-beta.1 — 25 octombrie 2026
 
 - Senzor per vehicul pentru următoarea expirare a peajelor cu treceri nefolosite.
@@ -22,7 +39,7 @@
 
 ## 0.2.2-beta.1 — 25 octombrie 2026
 
-- Adăugat iconul în `brand/`, pentru temele light/dark
+- Adăugat iconul furnizat de utilizator în `brand/`, pentru temele light/dark
   și variantele normale/@2x. Fișierul original este păstrat fără modificări.
 
 ## 0.2.1-beta.1 — 25 octombrie 2026
