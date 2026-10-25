@@ -191,6 +191,15 @@
           },
           "sections_available": {
             "name": "Available sections"
+          },
+          "section_errors": {
+            "name": "Section errors"
+          },
+          "update_complete": {
+            "name": "Update complete"
+          },
+          "last_full_update": {
+            "name": "Last complete update (ISO)"
           }
         }
       }

@@ -187,10 +187,18 @@ class AccountSensor(AccountEntity, SensorEntity):
         if self.key == "last_successful_update":
             stamp = self.coordinator.last_successful_update
             data = self.coordinator.data or {}
+            full = self.coordinator.last_full_update
             return {
                 "updated_at": stamp.isoformat() if stamp else None,
                 "last_poll_succeeded": self.coordinator.last_update_success,
                 "sections_available": data.get("sections", {}) if self.coordinator.last_update_success else {},
+                "section_errors": data.get("section_errors", {}) if self.coordinator.last_update_success else {},
+                "update_complete": self.coordinator.last_update_success
+                and all(
+                    data.get("sections", {}).get(key) is True
+                    for key in ("services", "invoices", "notifications", "service_status")
+                ),
+                "last_full_update": full.isoformat() if full else None,
             }
         if self.key == "service_status":
             return {k: v for k, v in (self.account.get("service_status") or {}).items() if k != "state"}

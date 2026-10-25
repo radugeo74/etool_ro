@@ -180,7 +180,26 @@ class EtollClient:
             if status == 403:
                 raise EtollError("Account does not have access to this resource")
             if status != 200:
-                raise EtollError(f"Unexpected API status ({status})")
+                # Report only structured validation metadata, never server text
+                # which could echo account details or request values.
+                details = []
+                if isinstance(payload, dict):
+                    parameter = payload.get("parameter")
+                    if isinstance(parameter, str) and parameter in {"size", "status", "cursor", "orderBy", "type"}:
+                        details.append(f"parameter={parameter}")
+                    issues = payload.get("issues")
+                    if isinstance(issues, list):
+                        codes = sorted(
+                            {
+                                issue["issueCode"]
+                                for issue in issues
+                                if isinstance(issue, dict) and type(issue.get("issueCode")) is int
+                            }
+                        )
+                        if codes:
+                            details.append("issue_codes=" + ",".join(str(code) for code in codes))
+                suffix = "; " + "; ".join(details) if details else ""
+                raise EtollError(f"Unexpected API status ({status}){suffix}")
             return payload
         raise AuthenticationError("Account session rejected")
 
@@ -241,11 +260,21 @@ class EtollClient:
 
     async def _toll_pages(self, state):
         rows, seen_ids, seen_cursors = [], set(), set()
-        params = {"size": "100", "status": state}
+        # Match the official portal's GetServicesPage call (20 entries).
+        params = {"size": "20", "status": state}
         for _ in range(100):
-            payload = await self._get("tolls", params.copy())
-            if not isinstance(payload, dict) or not isinstance(payload.get("tolls"), list) or payload.get("errors"):
-                raise EtollError("Unrecognized or incomplete services response")
+            try:
+                payload = await self._get("tolls", params.copy())
+            except AuthenticationError:
+                raise
+            except EtollError as err:
+                raise EtollError(f"Services {state}, page size 20: {err}") from err
+            if not isinstance(payload, dict):
+                raise EtollError("Services response is not an object")
+            if not isinstance(payload.get("tolls"), list):
+                raise EtollError("Services response has no tolls list")
+            if payload.get("errors"):
+                raise EtollError("Services response reports incomplete results")
             for row in payload["tolls"]:
                 if not isinstance(row, dict) or not isinstance(row.get("id"), str) or row["id"] in seen_ids:
                     raise EtollError("Invalid or duplicate service")
@@ -268,15 +297,21 @@ class EtollClient:
 
         now = datetime.now(timezone.utc)
         vehicles = await self.snapshot(profile_id)
-        account, sections = {}, {}
+        account, sections, section_errors = {}, {}, {}
 
         async def section(name, fetch, normalize):
+            stage = "fetch"
             try:
-                value = normalize(await fetch())
+                payload = await fetch()
+                stage = "parse"
+                value = normalize(payload)
             except AuthenticationError:
                 raise
-            except EtollError:
+            except EtollError as err:
                 sections[name] = False
+                # EtollError messages are authored locally; no response body,
+                # identifier, credentials or exception cause is exported.
+                section_errors[name] = {"stage": stage, "message": str(err)}
                 return None
             sections[name] = True
             return value
@@ -313,5 +348,6 @@ class EtollClient:
             "vehicles": vehicles,
             "account": account,
             "sections": sections,
+            "section_errors": section_errors,
             "updated_at": datetime.now(timezone.utc),
         }

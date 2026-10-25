@@ -10,4 +10,5 @@ async def async_get_config_entry_diagnostics(hass, entry):
         "vehicle_count": len(vehicles),
         "eligibility_known_count": sum(bool(v.get("eligibility_known")) for v in vehicles.values()),
         "sections_available": data.get("sections", {}),
+        "section_errors": data.get("section_errors", {}),
     }

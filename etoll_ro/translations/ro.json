@@ -191,6 +191,15 @@
           },
           "sections_available": {
             "name": "Secțiuni disponibile"
+          },
+          "section_errors": {
+            "name": "Erori pe secțiuni"
+          },
+          "update_complete": {
+            "name": "Actualizare completă"
+          },
+          "last_full_update": {
+            "name": "Ultima actualizare completă (ISO)"
           }
         }
       }

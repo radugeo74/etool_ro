@@ -23,11 +23,13 @@ class EtollCoordinator(DataUpdateCoordinator):
         self.client = client
         self.profile_id = entry.data["profile_id"]
         self.last_successful_update = None
+        self.last_full_update = None
 
     async def _async_update_data(self):
         try:
             snapshot = await self.client.dashboard(self.profile_id)
-            self.last_successful_update = last_complete_update(self.last_successful_update, snapshot)
+            self.last_successful_update = snapshot["updated_at"]
+            self.last_full_update = last_complete_update(self.last_full_update, snapshot)
             return snapshot
         except AuthenticationError as err:
             raise ConfigEntryAuthFailed("Reconnect your eToll account") from err
