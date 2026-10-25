@@ -22,7 +22,7 @@
 
 ## 0.2.2-beta.1 — 25 octombrie 2026
 
-- Adăugat iconul furnizat de utilizator în `brand/`, pentru temele light/dark
+- Adăugat iconul în `brand/`, pentru temele light/dark
   și variantele normale/@2x. Fișierul original este păstrat fără modificări.
 
 ## 0.2.1-beta.1 — 25 octombrie 2026
