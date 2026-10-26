@@ -75,19 +75,9 @@ MTMA verificate la 25 octombrie 2026. Codul tehnic este păstrat în atributul
 `category_code`. Dacă o automatizare compara starea cu `A`, folosește acum acest
 atribut. Categoriile nerecunoscute se afișează cu codul original.
 
-## Actualizare de la 0.1.0-beta.1
-
-Păstrează o copie a folderului vechi în afara `custom_components`, suprascrie
-fișierele din `/config/custom_components/etoll_ro` cu cele din arhiva nouă și
-repornește Core. Nu elimina intrarea integrării: datele de acces, ID-urile celor
-4 entități existente și istoricul se păstrează. Entitățile noi se adaugă automat.
-Rollback: restaurează folderul vechi și repornește Core; entitățile noi pot rămâne
-indisponibile în registru până la eliminarea lor manuală.
-
 ## Instalare manuală a versiunii beta
 
-1. Folosește Home Assistant Core 2025.11 sau mai nou (țintă de compatibilitate,
-   încă neverificată într-un runtime HA).
+1. Folosește Home Assistant Core 2025.11 sau mai nou
 2. Din arhiva de instalare copiază directorul `custom_components/etoll_ro` în
    `/config/custom_components/etoll_ro` pe sistemul Home Assistant.
 3. Repornește Home Assistant.
@@ -172,11 +162,6 @@ componenta 1; nu este o verificare individuală a tuturor API-urilor.
 8. Compară ultima factură, totalurile anuale și soldul peajelor cu portalul.
 9. În diagnostic verifică `sections_available`; o secțiune `false` necesită
    investigare. Poți trimite diagnosticul integrării, fără exporturi brute de cont.
-
-Nu trimite parole, tokenuri sau exporturi HAR nesanitizate în chat ori în issues.
-Un eșec trebuie raportat prin mesajul generic afișat, versiunea HA și diagnosticul
-integrării. Dacă SSO respinge `password` grant, este necesar un flux de autentificare
-suportat de furnizor; nu există ocolirea autentificării.
 
 ## Dezvoltare și verificări
 
