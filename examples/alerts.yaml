@@ -1,0 +1,32 @@
+# Înlocuiește ID-urile cu cele reale din Developer tools → States.
+# Copiază lista în automations.yaml sau adaptează în editorul YAML al automatizării.
+- alias: "eToll — rovinieta expiră în maximum 7 zile"
+  triggers:
+    - trigger: time
+      at: "09:00:00"
+  conditions:
+    - condition: template
+      value_template: >-
+        {% set expiry = as_timestamp(states('sensor.vehicul_expirare_rovinieta'), none) %}
+        {{ expiry is not none and 0 < expiry - as_timestamp(now()) <= 7 * 86400 }}
+  actions:
+    - action: persistent_notification.create
+      data:
+        notification_id: etoll_expiry_reminder
+        title: "Rovinieta expiră curând"
+        message: >-
+          Verifică rovinieta în portalul eToll.
+          Expirare: {{ states('sensor.vehicul_expirare_rovinieta') }}.
+
+- alias: "eToll — rovinieta a devenit nevalabilă"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.vehicul_rovinieta_valabila
+      from: "on"
+      to: "off"
+  actions:
+    - action: persistent_notification.create
+      data:
+        notification_id: etoll_vignette_expired
+        title: "Rovinietă nevalabilă"
+        message: "Verifică situația vehiculului în portalul oficial eToll."

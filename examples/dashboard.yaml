@@ -1,0 +1,60 @@
+# Card nativ, fără pluginuri de dashboard. Adaugă un card Manual și copiază conținutul.
+# Înlocuiește fiecare entity cu ID-ul real din Developer tools → States.
+type: vertical-stack
+cards:
+  - type: markdown
+    content: |
+      ## eToll România
+      Cont, roviniete și cheltuieli auto
+  - type: entities
+    title: Contul meu
+    show_header_toggle: false
+    entities:
+      - entity: sensor.cont_etoll_numar_vehicule
+        name: Vehicule
+      - entity: sensor.cont_etoll_starea_portalului_etoll
+        name: Portal eToll
+      - entity: sensor.cont_etoll_notificari_necitite
+        name: Notificări necitite
+      - entity: sensor.cont_etoll_ultima_factura
+        name: Ultima factură
+      - entity: sensor.cont_etoll_total_platit_in_anul_curent
+        name: Total plătit în acest an
+      - entity: sensor.cont_etoll_ultima_actualizare_reusita
+        name: Ultima actualizare reușită
+  - type: entities
+    title: Vehiculul meu
+    show_header_toggle: false
+    entities:
+      - entity: binary_sensor.vehicul_rovinieta_valabila
+        name: Rovinietă valabilă
+      - entity: sensor.vehicul_expirare_rovinieta
+        name: Expiră la
+      - entity: sensor.vehicul_zile_ramase_rovinieta
+        name: Rovinietă valabilă până la
+      - entity: sensor.vehicul_treceri_de_pod_ramase
+        name: Treceri de pod disponibile
+      - entity: sensor.vehicul_urmatoarea_expirare_a_peajelor
+        name: Următoarea expirare a peajelor
+      - entity: sensor.vehicul_categorie_vehicul
+        name: Categorie
+      - entity: binary_sensor.vehicul_date_vehicul
+        name: Date vehicul — apasă pentru detalii
+  - type: entities
+    title: Cheltuieli în anul curent
+    show_header_toggle: false
+    entities:
+      - entity: sensor.vehicul_cheltuieli_vehicul_in_anul_curent
+        name: Total vehicul
+      - type: attribute
+        entity: sensor.vehicul_cheltuieli_vehicul_in_anul_curent
+        attribute: vignette_amount
+        name: Roviniete (lei)
+      - type: attribute
+        entity: sensor.vehicul_cheltuieli_vehicul_in_anul_curent
+        attribute: bridge_amount
+        name: Peaje (lei)
+      - type: attribute
+        entity: sensor.vehicul_cheltuieli_vehicul_in_anul_curent
+        attribute: route_amount
+        name: Tichete de rută (lei)
