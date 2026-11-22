@@ -2,6 +2,10 @@
 
 ## 0.2.8-beta.1 — 25 octombrie 2026
 
+- Repository reorganizat pentru HACS: integrarea se află în `custom_components/etoll_ro/`.
+- Manifest completat cu code owner, documentație și issue tracker pentru repository-ul public.
+- README actualizat cu instalarea HACS și starea reală a versiunii 0.2.8-beta.1.
+- Adăugate validări GitHub Actions separate pentru HACS și hassfest; ambele trec.
 - Bridge crossings remaining afișează „Taxă anulată din 01.10.2026” cât timp
   configurația publică a portalului include BRIDGE în REMOVESERVICES.
 - La eliminarea indicatorului revine la numărul de treceri; dacă citirea configurației
