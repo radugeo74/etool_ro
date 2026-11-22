@@ -1,0 +1,69 @@
+name: Publish release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - custom_components/etoll_ro/manifest.json
+      - .github/workflows/release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish manifest version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Read integration version
+        id: version
+        shell: bash
+        run: |
+          VERSION="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("custom_components/etoll_ro/manifest.json").read_text(encoding="utf-8"))
+          print(manifest["version"])
+          PY
+          )"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release if it does not exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          if gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists."
+            exit 0
+          fi
+
+          cat > release-notes.md <<'EOF'
+          ## eToll România
+
+          Prima versiune publicată a integrării pentru Home Assistant.
+
+          - structură compatibilă HACS în `custom_components/etoll_ro/`;
+          - configurare și reautentificare din Home Assistant;
+          - vehicule, roviniete, facturi, notificări și cheltuieli;
+          - diagnostic și izolare a erorilor pe secțiuni;
+          - suport pentru starea serviciului de pod retras;
+          - validări HACS și hassfest active.
+
+          Instalare: adaugă `https://github.com/radugeo74/etool_ro` în HACS ca **Custom repository → Integration**.
+
+          Domeniul integrării rămâne `etoll_ro`; această publicare nu schimbă ID-urile existente ale entităților.
+          EOF
+
+          EXTRA=()
+          if [[ "$VERSION" == *-* ]]; then
+            EXTRA+=(--prerelease)
+          fi
+
+          gh release create "$VERSION"             --repo "$GITHUB_REPOSITORY"             --target "$GITHUB_SHA"             --title "eToll România $VERSION"             --notes-file release-notes.md             "${EXTRA[@]}"
