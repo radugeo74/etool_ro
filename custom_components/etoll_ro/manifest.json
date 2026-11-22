@@ -1,9 +1,10 @@
 {
   "domain": "etoll_ro",
   "name": "eToll România",
-  "codeowners": [],
+  "codeowners": ["@radugeo74"],
   "config_flow": true,
-  "documentation": "https://portal.etoll.ro/",
+  "documentation": "https://github.com/radugeo74/etool_ro",
+  "issue_tracker": "https://github.com/radugeo74/etool_ro/issues",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
   "requirements": [],
