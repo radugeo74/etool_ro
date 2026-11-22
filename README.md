@@ -5,11 +5,10 @@ Codul nou este disponibil sub licența MIT. Nu este afiliat CNAIR sau proiectulu
 `cnecrea/tollro` și nu include cod din acel proiect. Iconul a fost furnizat de
 utilizator; licența MIT a codului nu stabilește drepturile asupra acestui material grafic.
 
-**Stare: 0.2.7-beta.1.** Clientul este testat automat cu răspunsuri sintetice și
-un server HTTP local. Autentificarea cu un cont real, schema răspunsurilor
-autentificate și încărcarea într-o instalare Home Assistant nu sunt încă validate.
-Nu considera această versiune confirmată pentru utilizare zilnică înaintea
-testului de acceptanță descris mai jos.
+**Stare: 0.2.8-beta.1.** Integrarea este folosită într-o instalare Home Assistant
+reală și funcționează stabil cu autentificarea eToll prin utilizator/parolă.
+Clientul păstrează verificările defensive pentru răspunsurile API și separă
+erorile secțiunilor opționale de actualizarea de bază a vehiculelor.
 
 ## Funcții incluse
 
@@ -91,20 +90,19 @@ Tokenurile sunt ținute doar în memorie și se regenerează după restart.
 
 ## Instalare prin HACS
 
-Structura repository-ului include `hacs.json` și un singur domeniu de integrare.
-**Nu există încă un repository publicat pentru acest proiect.** Instalarea HACS
-prin URL devine disponibilă după publicarea surselor într-un repository GitHub:
+Repository-ul este pregătit ca integrare HACS, cu componenta în
+`custom_components/etoll_ro`.
 
-1. Actualizează `documentation` din manifest cu URL-ul noului repository și
-   completează `codeowners` cu administratorul real; nu folosi URL-ul proiectului
-   `cnecrea/tollro` pentru această integrare.
-2. Publică sursele, `hacs.json`, README și licența, fără `.venv`, `.research` sau date locale.
-3. În HACS → Custom repositories adaugă URL-ul repository-ului, tip **Integration**.
-4. Instalează și urmează pașii de configurare de mai sus.
+1. În HACS → **Integrations** → meniul cu trei puncte → **Custom repositories**.
+2. Adaugă `https://github.com/radugeo74/etool_ro` cu tipul **Integration**.
+3. Deschide **eToll România** în HACS și apasă **Download**.
+4. Repornește Home Assistant.
+5. Mergi la Setări → Dispozitive și servicii → Adaugă integrare → **eToll România**.
+6. Introdu emailul/telefonul și parola contului eToll.
 
-Nu este necesară listarea în catalogul implicit HACS pentru un custom repository.
-Validarea HACS/hassfest rămâne de făcut după completarea metadatelor GitHub.
-
+Pentru actualizări ulterioare, HACS poate instala release-urile publicate ale
+repository-ului. Domeniul rămâne `etoll_ro`, astfel încât configurarea și ID-urile
+existente ale entităților nu se schimbă doar prin trecerea la structura HACS.
 ## Semantica senzorilor
 
 `Rovinietă valabilă` este `on` cât timp momentul curent nu depășește expirarea
@@ -165,18 +163,15 @@ componenta 1; nu este o verificare individuală a tuturor API-urilor.
 
 ## Dezvoltare și verificări
 
+Repository-ul folosește validările GitHub Actions pentru **HACS** și **hassfest**.
+Pentru o verificare locală rapidă a sintaxei Python:
+
 ```powershell
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements-dev.txt
-.venv\Scripts\python -m pytest -q
-.venv\Scripts\ruff check custom_components tests
-.venv\Scripts\python -m compileall -q custom_components
+python -m compileall -q custom_components
 ```
 
-Testele clientului rulează fără Home Assistant, inclusiv pe Windows. Ele nu înlocuiesc
-testele config flow, entity lifecycle și reauth în Home Assistant. Detaliile despre
-sursele protocolului și limitele validării sunt în `docs/PROTOCOL.md`.
-
+Validările CI verifică structura și metadatele integrării; testarea funcțională
+rămâne cea dintr-o instalare Home Assistant conectată la un cont eToll real.
 Dezinstalare: elimină integrarea din Dispozitive și servicii, șterge numai directorul
 `/config/custom_components/etoll_ro` și repornește. Contul și datele eToll nu se modifică.
 
