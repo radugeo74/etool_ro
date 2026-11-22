@@ -1,0 +1,22 @@
+name: hassfest
+
+on:
+  push:
+    branches:
+      - main
+      - hacs-packaging-0.2.8
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Run hassfest
+        uses: home-assistant/actions/hassfest@master
