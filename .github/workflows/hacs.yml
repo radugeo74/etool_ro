@@ -1,0 +1,25 @@
+name: HACS validation
+
+on:
+  push:
+    branches:
+      - main
+      - hacs-packaging-0.2.8
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Run HACS Action
+        uses: hacs/action@main
+        with:
+          category: integration
+          comment: "false"
